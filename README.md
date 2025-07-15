@@ -1,9 +1,9 @@
 # FIWAREデータ基盤
-このアプリケーションは、スプリント1-3で作成したデータ基盤になります。
+このリポジトリは、秋田版農業情報基盤の構築・運用に関するソースコードおよび関連ドキュメントをまとめたものです。
 
 # アーキテクチャ
 
-このアプリケーションは、[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/), [QuantumLeap](https://smartsdk.github.io/ngsi-timeseries-api/)の2つのFIWAREコンポーネントで構成されています。
+この情報基盤は、[Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/), [QuantumLeap](https://smartsdk.github.io/ngsi-timeseries-api/)の2つのFIWAREコンポーネントで構成されています。
 
 [Orion Context Broker](https://fiware-orion.readthedocs.io/en/latest/)は、[NGSI-LD](https://forge.etsi.org/swagger/ui/?url=https://forge.etsi.org/rep/NGSI-LD/NGSI-LD/raw/master/spec/updated/generated/full_api.json)リクエストを受けてコンテキスト・エンティティの状態を変更します。FIWARE [QuantumLeap](https://smartsdk.github.io/ngsi-timeseries-api/)はコンテキストの変更をサブスクライブし、CrateDBデータベースにデータを永続化します。
 
@@ -37,5 +37,5 @@ services スクリプトを実行することによって、すべてのサー�
 > ```
 
 # データの可視化
-
-ブラウザから[http://localhost:3000](http://localhost:3000)にアクセスすることで、[Grafana](https://grafana.com/ja/)によってデータ基盤の情報を参照することができます。
+[Grafana](https://grafana.com/ja/)を使って情報基盤のデータを確認できます。Webブラウザで[http://localhost:3000](http://localhost:3000)にアクセスしてください。  
+(ユーザ名：admin、初期パスワード：admin)

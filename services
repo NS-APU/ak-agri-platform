@@ -95,7 +95,7 @@ case "${command}" in
 		echo -e "- \033[1;34mQuantumLeap\033[0m will write to CrateDB"
 		echo -e "- Data models \033[1m@context\033[0m is supplied externally"
 		echo ""
-		${dockerCmd} -p fiware up -d --renew-anon-volumes
+		${dockerCmd} -p ${COMPOSE_PROJECT_NAME} up -d --renew-anon-volumes
 		displayServices "orion|fiware"
 		waitForMongo
 		waitForOrion
