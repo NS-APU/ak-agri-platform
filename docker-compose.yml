@@ -1,0 +1,125 @@
+#
+#
+services:
+
+  # Orion is the context broker
+  orion:
+    labels:
+      org.fiware: 'agri-data-platform'
+    platform: linux/amd64
+    image: quay.io/fiware/orion-ld:${ORION_LD_VERSION}
+    hostname: orion
+    container_name: fiware-orion
+    depends_on:
+      - mongo-db
+    networks:
+      - default
+    ports:
+      - ${EXPOSED_PORT:-1026}:${ORION_LD_PORT:-1026}
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        orionld -fg -multiservice -ngsiv1Autocast -dbhost mongo-db -logLevel DEBUG -forwarding -mongocOnly
+    healthcheck:
+      test: curl --fail -s http://orion:${ORION_LD_PORT}/version || exit 1
+      interval: 5s
+
+  # Databases
+  mongo-db:
+    labels:
+      org.fiware: 'agri-data-platform'
+    image: mongo:${MONGO_DB_VERSION}
+    hostname: mongo-db
+    container_name: db-mongo
+    expose:
+      - "${MONGO_DB_PORT}"
+    #ports:
+      #- "${MONGO_DB_PORT}:${MONGO_DB_PORT}" # localhost:27017
+    networks:
+      - default
+    volumes:
+      - mongo-db:/data/db
+      - mongo-config:/data/configdb
+    healthcheck:
+      test: ["CMD","mongosh", "localhost:27017/test", "--quiet"]
+      interval: 5s
+
+  # Quantum Leap is persisting Short Term History to Crate-DB
+  quantumleap:
+    labels:
+      org.fiware: 'agri-data-platform'
+    image: orchestracities/quantumleap:${QUANTUMLEAP_VERSION}
+    hostname: quantumleap
+    container_name: fiware-quantumleap
+    depends_on:
+      - crate-db
+    networks:
+      - default
+    ports:
+      - "${QUANTUMLEAP_PORT:-8668}:${QUANTUMLEAP_PORT:-8668}"
+    environment:
+      - CRATE_HOST=crate-db
+      - LOGLEVEL=DEBUG
+    healthcheck:
+      test: curl --fail -s http://quantumleap:${QUANTUMLEAP_PORT}/version || exit 1
+
+  crate-db:
+    labels:
+      org.fiware: 'agri-data-platform'
+    image: crate:${CRATE_VERSION}
+    hostname: crate-db
+    container_name: db-crate
+    #ports:
+      # Admin UI
+      #- "${CRATE_HTTP_PORT}:${CRATE_HTTP_PORT}"
+      # Transport protocol
+      #- "${CRATE_TRANSPORT_PORT}:${CRATE_TRANSPORT_PORT}"
+    command: crate -Cauth.host_based.enabled=false  -Ccluster.name=democluster -Chttp.cors.enabled=true -Chttp.cors.allow-origin="*" -Cdiscovery.type=single-node
+    environment:
+      - CRATE_HEAP_SIZE=2g # see https://crate.io/docs/crate/howtos/en/latest/deployment/containers/docker.html#troubleshooting
+    volumes:
+      - crate-db:/data
+
+  grafana:
+    labels:
+      org.fiware: 'agri-data-platform'
+    image: grafana/grafana-enterprise:${GRAFANA_VERSION}
+    container_name: grafana
+    restart: unless-stopped
+    depends_on:
+      - crate-db
+    ports:
+      - "${GRAFANA_PORT}:${GRAFANA_PORT}"
+    environment:
+      - GF_PLUGINS_PREINSTALL=yesoreyeram-infinity-datasource@${GRAFANA_PLUGIN_INFINITY_VERSION}
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/FloodMonitoring.json
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_SECURITY_COOKIE_SAMESITE=none
+      - GF_SECURITY_COOKIE_SECURE=true
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
+      - GF_LOG_LEVEL=debug
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        /run.sh
+
+networks:
+  default:
+    labels:
+      org.fiware: 'agri-data-platform'
+    ipam:
+      config:
+        - subnet: 172.18.1.0/24
+
+volumes:
+  crate-db: ~
+  grafana: ~
+  mongo-db: ~
+  mongo-config: ~
