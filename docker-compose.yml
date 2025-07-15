@@ -5,7 +5,7 @@ services:
   # Orion is the context broker
   orion:
     labels:
-      org.fiware: 'agri-data-platform'
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
     platform: linux/amd64
     image: quay.io/fiware/orion-ld:${ORION_LD_VERSION}
     hostname: orion
@@ -28,7 +28,7 @@ services:
   # Databases
   mongo-db:
     labels:
-      org.fiware: 'agri-data-platform'
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
     image: mongo:${MONGO_DB_VERSION}
     hostname: mongo-db
     container_name: db-mongo
@@ -48,7 +48,7 @@ services:
   # Quantum Leap is persisting Short Term History to Crate-DB
   quantumleap:
     labels:
-      org.fiware: 'agri-data-platform'
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
     image: orchestracities/quantumleap:${QUANTUMLEAP_VERSION}
     hostname: quantumleap
     container_name: fiware-quantumleap
@@ -66,7 +66,7 @@ services:
 
   crate-db:
     labels:
-      org.fiware: 'agri-data-platform'
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
     image: crate:${CRATE_VERSION}
     hostname: crate-db
     container_name: db-crate
@@ -81,45 +81,16 @@ services:
     volumes:
       - crate-db:/data
 
-  grafana:
-    labels:
-      org.fiware: 'agri-data-platform'
-    image: grafana/grafana-enterprise:${GRAFANA_VERSION}
-    container_name: grafana
-    restart: unless-stopped
-    depends_on:
-      - crate-db
-    ports:
-      - "${GRAFANA_PORT}:${GRAFANA_PORT}"
-    environment:
-      - GF_PLUGINS_PREINSTALL=yesoreyeram-infinity-datasource@${GRAFANA_PLUGIN_INFINITY_VERSION}
-      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/FloodMonitoring.json
-      - GF_SECURITY_ALLOW_EMBEDDING=true
-      - GF_SECURITY_COOKIE_SAMESITE=none
-      - GF_SECURITY_COOKIE_SECURE=true
-      - GF_PANELS_DISABLE_SANITIZE_HTML=true
-      - GF_LOG_LEVEL=debug
-    volumes:
-      - grafana:/var/lib/grafana
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
-      - ./grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
-      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
-    entrypoint:
-      - /bin/bash
-      - -c
-      - |
-        /run.sh
-
 networks:
   default:
     labels:
-      org.fiware: 'agri-data-platform'
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
     ipam:
       config:
         - subnet: 172.18.1.0/24
+    name: 'fiware_default'
 
 volumes:
   crate-db: ~
-  grafana: ~
   mongo-db: ~
   mongo-config: ~

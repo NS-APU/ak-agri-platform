@@ -35,7 +35,3 @@ services スクリプトを実行することによって、すべてのサー�
 > ```colsole
 > ./services stop
 > ```
-
-# データの可視化
-[Grafana](https://grafana.com/ja/)を使って情報基盤のデータを確認できます。Webブラウザで[http://localhost:3000](http://localhost:3000)にアクセスしてください。  
-(ユーザ名：admin、初期パスワード：admin)

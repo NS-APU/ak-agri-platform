@@ -58,7 +58,7 @@ waitForMongo () {
 }
 
 stoppingContainers () {
-	CONTAINERS=$(docker ps --filter "label=org.fiware=agri-data-platform" -aq)
+	CONTAINERS=$(docker ps --filter "label=org.fiware=${COMPOSE_LABEL_FIWARE}" -aq)
 	if [[ -n $CONTAINERS ]]; then 
 		echo "Stopping containers"
 		docker rm -f $CONTAINERS || true
@@ -68,9 +68,9 @@ stoppingContainers () {
 		echo "Removing old volumes"
 		docker volume rm $VOLUMES || true
 	fi
-	NETWORKS=$(docker network ls  --filter "label=org.fiware=agri-data-platform" -q) 
+	NETWORKS=$(docker network ls  --filter "label=org.fiware=${COMPOSE_LABEL_FIWARE}" -q) 
 	if [[ -n $NETWORKS ]]; then 
-		echo "Removing agri-data-platform networks"
+		echo "Removing ${COMPOSE_LABEL_FIWARE} networks"
 		docker network rm $NETWORKS || true
 	fi
 }
