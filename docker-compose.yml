@@ -77,7 +77,7 @@ services:
       #- "${CRATE_TRANSPORT_PORT}:${CRATE_TRANSPORT_PORT}"
     command: crate -Cauth.host_based.enabled=false  -Ccluster.name=democluster -Chttp.cors.enabled=true -Chttp.cors.allow-origin="*" -Cdiscovery.type=single-node
     environment:
-      - CRATE_HEAP_SIZE=2g # see https://crate.io/docs/crate/howtos/en/latest/deployment/containers/docker.html#troubleshooting
+      - CRATE_HEAP_SIZE=1g # see https://crate.io/docs/crate/howtos/en/latest/deployment/containers/docker.html#troubleshooting
     volumes:
       - crate-db:/data
 
