@@ -17,8 +17,9 @@
     -   時間ベースの履歴コンテキスト・データを保持するデータシンクとして使用されます
     -   時間ベースのデータクエリを解釈する HTTP エンドポイントを提供します
 
+また、GISデータを提供するための[Titiler](https://developmentseed.org/titiler/)が配置されています。
 
-![](./docs/architecture_1-3.png)
+![](./docs/architecture.png)
 
 # 起動
 
