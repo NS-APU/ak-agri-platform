@@ -34,7 +34,7 @@ services:
     container_name: db-mongo
     expose:
       - "${MONGO_DB_PORT}"
-    #ports:
+      #ports:
       #- "${MONGO_DB_PORT}:${MONGO_DB_PORT}" # localhost:27017
     networks:
       - default
@@ -42,7 +42,7 @@ services:
       - mongo-db:/data/db
       - mongo-config:/data/configdb
     healthcheck:
-      test: ["CMD","mongosh", "localhost:27017/test", "--quiet"]
+      test: [ "CMD", "mongosh", "localhost:27017/test", "--quiet" ]
       interval: 5s
 
   # Quantum Leap is persisting Short Term History to Crate-DB
@@ -71,15 +71,43 @@ services:
     hostname: crate-db
     container_name: db-crate
     #ports:
-      # Admin UI
-      #- "${CRATE_HTTP_PORT}:${CRATE_HTTP_PORT}"
-      # Transport protocol
-      #- "${CRATE_TRANSPORT_PORT}:${CRATE_TRANSPORT_PORT}"
+    # Admin UI
+    #- "${CRATE_HTTP_PORT}:${CRATE_HTTP_PORT}"
+    # Transport protocol
+    #- "${CRATE_TRANSPORT_PORT}:${CRATE_TRANSPORT_PORT}"
     command: crate -Cauth.host_based.enabled=false  -Ccluster.name=democluster -Chttp.cors.enabled=true -Chttp.cors.allow-origin="*" -Cdiscovery.type=single-node
     environment:
       - CRATE_HEAP_SIZE=1g # see https://crate.io/docs/crate/howtos/en/latest/deployment/containers/docker.html#troubleshooting
     volumes:
       - crate-db:/data
+
+  titiler:
+    platform: linux/amd64
+    labels:
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
+    image: ghcr.io/developmentseed/titiler:${TITILER_VERSION}
+    hostname: titiler
+    container_name: titiler
+    ports:
+      - "${TITILER_PORT}:${TITILER_PORT}"
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        python -m pip install boto3==${TITILER_BOTO3_VERSION} --upgrade
+        uvicorn titiler.application.main:app --host 0.0.0.0 --port ${TITILER_PORT} --workers 1
+    environment:
+      - CPL_TMPDIR=/tmp
+      - GDAL_CACHEMAX=75%
+      - GDAL_INGESTED_BYTES_AT_OPEN=32768
+      - GDAL_DISABLE_READDIR_ON_OPEN=EMPTY_DIR
+      - GDAL_HTTP_MERGE_CONSECUTIVE_RANGES=YES
+      - GDAL_HTTP_MULTIPLEX=YES
+      - GDAL_HTTP_VERSION=2
+      - PYTHONWARNINGS=ignore
+      - VSI_CACHE=TRUE
+      - VSI_CACHE_SIZE=536870912
+      - CPL_VSIL_CURL_ALLOWED_EXTENSIONS=.tif
 
 networks:
   default:
