@@ -1,3 +1,4 @@
 #
 certs/
 docker-compose-dev.yml
+titiler/initdata
