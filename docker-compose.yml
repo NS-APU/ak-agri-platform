@@ -109,6 +109,52 @@ services:
       - VSI_CACHE_SIZE=536870912
       - CPL_VSIL_CURL_ALLOWED_EXTENSIONS=.tif
 
+  nginx:
+    labels:
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
+    image: nginx:${NGINX_VERSION}
+    hostname: nginx
+    container_name: nginx
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - orion
+      - quantumleap
+      - titiler
+      - grafana
+
+  grafana:
+    labels:
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
+    image: grafana/grafana-enterprise:${GRAFANA_VERSION}
+    hostname: grafana
+    container_name: grafana
+    networks:
+      - default
+    ports:
+      - "${GRAFANA_PORT}:${GRAFANA_PORT}"
+    environment:
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SECURITY_ADMIN_PASSWORD=ak-agri
+      - GF_PLUGINS_PREINSTALL=yesoreyeram-infinity-datasource@${GRAFANA_PLUGIN_INFINITY_VERSION},marcusolsson-static-datasource@${GRAFANA_PLUGIN_BUSINESS_INPUT},dalvany-image-panel@${GRAFANA_PLUGIN_DYNAMIC_IMAGE_PANEL}
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/FloodMonitoring.json
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
+      - GF_LOG_LEVEL=debug
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./grafana/dashboard-gis.yml:/etc/grafana/provisioning/dashboards/dashboard-gis.yml
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        /run.sh
+
 networks:
   default:
     labels:
@@ -122,3 +168,4 @@ volumes:
   crate-db: ~
   mongo-db: ~
   mongo-config: ~
+  grafana: ~
