@@ -12,10 +12,6 @@ services:
     container_name: fiware-orion
     depends_on:
       - mongo-db
-    networks:
-      - default
-    ports:
-      - ${EXPOSED_PORT:-1026}:${ORION_LD_PORT:-1026}
     entrypoint:
       - /bin/bash
       - -c
@@ -34,10 +30,6 @@ services:
     container_name: db-mongo
     expose:
       - "${MONGO_DB_PORT}"
-      #ports:
-      #- "${MONGO_DB_PORT}:${MONGO_DB_PORT}" # localhost:27017
-    networks:
-      - default
     volumes:
       - mongo-db:/data/db
       - mongo-config:/data/configdb
@@ -54,10 +46,6 @@ services:
     container_name: fiware-quantumleap
     depends_on:
       - crate-db
-    networks:
-      - default
-    ports:
-      - "${QUANTUMLEAP_PORT:-8668}:${QUANTUMLEAP_PORT:-8668}"
     environment:
       - CRATE_HOST=crate-db
       - LOGLEVEL=DEBUG
@@ -70,11 +58,6 @@ services:
     image: crate:${CRATE_VERSION}
     hostname: crate-db
     container_name: db-crate
-    #ports:
-    # Admin UI
-    #- "${CRATE_HTTP_PORT}:${CRATE_HTTP_PORT}"
-    # Transport protocol
-    #- "${CRATE_TRANSPORT_PORT}:${CRATE_TRANSPORT_PORT}"
     command: crate -Cauth.host_based.enabled=false  -Ccluster.name=democluster -Chttp.cors.enabled=true -Chttp.cors.allow-origin="*" -Cdiscovery.type=single-node
     environment:
       - CRATE_HEAP_SIZE=1g # see https://crate.io/docs/crate/howtos/en/latest/deployment/containers/docker.html#troubleshooting
@@ -88,14 +71,12 @@ services:
     image: ghcr.io/developmentseed/titiler:${TITILER_VERSION}
     hostname: titiler
     container_name: titiler
-    ports:
-      - "${TITILER_PORT}:${TITILER_PORT}"
     entrypoint:
       - /bin/bash
       - -c
       - |
         python -m pip install boto3==${TITILER_BOTO3_VERSION} --upgrade
-        uvicorn titiler.application.main:app --host 0.0.0.0 --port ${TITILER_PORT} --workers 1
+        uvicorn titiler.application.main:app --host 0.0.0.0 --port ${TITILER_PORT} --workers 1 --proxy-headers --forwarded-allow-ips='*' --root-path=/api/titiler
     environment:
       - CPL_TMPDIR=/tmp
       - GDAL_CACHEMAX=75%
@@ -108,6 +89,47 @@ services:
       - VSI_CACHE=TRUE
       - VSI_CACHE_SIZE=536870912
       - CPL_VSIL_CURL_ALLOWED_EXTENSIONS=.tif
+
+  nginx:
+    labels:
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
+    image: nginx:${NGINX_VERSION}
+    hostname: nginx
+    container_name: nginx
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - orion
+      - quantumleap
+      - titiler
+      - grafana
+
+  grafana:
+    labels:
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
+    image: grafana/grafana-enterprise:${GRAFANA_VERSION}
+    hostname: grafana
+    container_name: grafana
+    environment:
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(http_addr)s:%(http_port)s/grafana/
+      - GF_SECURITY_ADMIN_PASSWORD=ak-agri
+      - GF_PLUGINS_PREINSTALL=yesoreyeram-infinity-datasource@${GRAFANA_PLUGIN_INFINITY_VERSION},marcusolsson-static-datasource@${GRAFANA_PLUGIN_BUSINESS_INPUT},dalvany-image-panel@${GRAFANA_PLUGIN_DYNAMIC_IMAGE_PANEL}
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/FloodMonitoring.json
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
+      - GF_LOG_LEVEL=debug
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./grafana/dashboard-gis.yml:/etc/grafana/provisioning/dashboards/dashboard-gis.yml
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        /run.sh
 
 networks:
   default:
@@ -122,3 +144,4 @@ volumes:
   crate-db: ~
   mongo-db: ~
   mongo-config: ~
+  grafana: ~
