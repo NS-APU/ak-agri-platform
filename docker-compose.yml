@@ -105,6 +105,9 @@ services:
       - quantumleap
       - titiler
       - grafana
+    healthcheck:
+      test: curl --fail -s http://nginx/api/orion/version || exit 1
+      interval: 5s
 
   grafana:
     labels:
@@ -130,6 +133,23 @@ services:
       - -c
       - |
         /run.sh
+
+  platform-init:
+    labels:
+      org.fiware: ${COMPOSE_LABEL_FIWARE}
+    image: curlimages/curl:${CURL_VERSION}
+    hostname: platform-init
+    container_name: platform-init
+    depends_on:
+      nginx:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        run-parts /init.d
+    volumes:
+      - ./init.d:/init.d
 
 networks:
   default:
