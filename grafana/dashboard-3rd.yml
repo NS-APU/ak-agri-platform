@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: '3rd Party Evaluation'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 60
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/3rdPartyEvaluation.json
+      foldersFromFilesStructure: false
