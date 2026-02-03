@@ -49,6 +49,7 @@ services:
     environment:
       - CRATE_HOST=crate-db
       - LOGLEVEL=DEBUG
+      - KEEP_RAW_ENTITY=true
     healthcheck:
       test: curl --fail -s http://quantumleap:${QUANTUMLEAP_PORT}/version || exit 1
 
@@ -127,6 +128,7 @@ services:
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
       - ./grafana/dashboard-gis.yml:/etc/grafana/provisioning/dashboards/dashboard-gis.yml
+      - ./grafana/dashboard-3rd.yml:/etc/grafana/provisioning/dashboards/dashboard-3rd.yml
       - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
     entrypoint:
       - /bin/bash

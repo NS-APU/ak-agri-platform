@@ -12,7 +12,6 @@ curl -L -X POST 'http://nginx/api/orion/ngsi-ld/v1/subscriptions/' \
   "watchedAttributes": ["systemTimestamp"],
   "notification": {
     "attributes": ["systemTimestamp", "robot", "house", "analysis"],
-    "format": "normalized",
     "endpoint": {
       "uri": "http://quantumleap:8668/v2/notify",
       "accept": "application/json",
