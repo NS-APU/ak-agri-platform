@@ -23,7 +23,8 @@ curl -L -X POST 'http://nginx/api/orion/ngsi-ld/v1/subscriptions/' \
     "@context": [
     "https://smart-data-models.github.io/dataModel.Device/context.jsonld",
     "https://smart-data-models.github.io/dataModel.Environment/context.jsonld",
-    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld"
+    "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld",
+    "http://nginx/ld/contexts/context.jsonld"
   ]
  }'
 

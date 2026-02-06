@@ -1,0 +1,8 @@
+{
+  "@context": {
+    "type": "@type",
+    "id": "@id",
+    "speed": "https://schema.org/speed",
+    "batteryLevel": "https://smartdatamodels.org/dataModel.Device/batteryLevel"
+  }
+}
