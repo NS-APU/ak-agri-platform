@@ -47,7 +47,7 @@ if [ "$STATUS" -eq 404 ]; then
       \"entities\": [{\"type\": \"AgrifarmRobotHouseSnapshot\"}],
       \"watchedAttributes\": [\"systemTimestamp\"],
       \"notification\": {
-        \"attributes\": [\"systemTimestamp\", \"robot\", \"house\", \"analysis\"],
+        \"attributes\": [\"systemTimestamp\", \"analysis\"],
         \"endpoint\": {
           \"uri\": \"${NOTIFY_URI}\",
           \"accept\": \"application/json\",
