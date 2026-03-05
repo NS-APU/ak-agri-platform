@@ -1,0 +1,702 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 3,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "panels": [],
+      "title": "生産計画",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "P0DB2B379060E8607"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pricePerKg FROZEN"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "冷凍"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pricePerKg FRESH"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "生鮮"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "displayLabels": [
+          "value"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "values": []
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "columns": [],
+          "computed_columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "P0DB2B379060E8607"
+          },
+          "filterExpression": "",
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "(\n    /* タイムスタンプ */\n    $ts := $.attributes[attrName = \"systemTimestamp\"].values;\n    \n    /* 属性 */\n    $createdAt := $.attributes[attrName = \"data\"].values.createdAt;\n    $id := $.attributes[attrName = \"data\"].values.id;\n    $isPublished := $.attributes[attrName = \"data\"].values.isPublished;\n    $packageType := $.attributes[attrName = \"data\"].values.packageType;\n    $planNumber := $.attributes[attrName = \"data\"].values.planNumber;\n    $pricePerKg := $.attributes[attrName = \"data\"].values.pricePerKg;\n    $producerId := $.attributes[attrName = \"data\"].values.producerId;\n    $quantity := $.attributes[attrName = \"data\"].values.quantity;\n    $shippingMonth := $.attributes[attrName = \"data\"].values.shippingMonth;\n    $shippingWeek := $.attributes[attrName = \"data\"].values.shippingWeek;\n    $updatedAt := $.attributes[attrName = \"data\"].values.updatedAt;\n    $variety := $.attributes[attrName = \"data\"].values.variety;\n\n    /* 出力 */\n    $map($ts, function($v, $i) {\n        {\n            \"timestamp\": $v,\n            \"createdAt\": $createdAt[$i],\n            \"id\": $id[$i],\n            \"isPublished\": $isPublished[$i],\n            \"packageType\": $packageType[$i],\n            \"planNumber\": $planNumber[$i],\n            \"pricePerKg\": $pricePerKg[$i],\n            \"producerId\": $producerId[$i],\n            \"quantity\": $quantity[$i],\n            \"shippingMonth\": $shippingMonth[$i],\n            \"shippingWeek\": $shippingWeek[$i],\n            \"updatedAt\": $updatedAt[$i],\n            \"variety\": $variety[$i]\n        }\n    })\n)",
+          "source": "url",
+          "summarizeExpression": "",
+          "type": "json",
+          "url": "/v2/entities/urn:ngsi-ld:FreshOrderSystemProductionPlan:001/value",
+          "url_options": {
+            "data": "",
+            "headers": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Fiware-Service",
+                "value": "fresh_order_system"
+              },
+              {
+                "key": "Fiware-ServicePath",
+                "value": "/"
+              }
+            ],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "荷姿の割合",
+      "transformations": [
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "packageType"
+            ],
+            "keepFields": true,
+            "naming": {
+              "asLabels": true
+            }
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "pricePerKg FROZEN",
+                "pricePerKg FRESH"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "piechart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 4,
+      "panels": [],
+      "title": "出荷予定",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "P0DB2B379060E8607"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "columns": [],
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "(\n    /* タイムスタンプ */\n    $ts := $.attributes[attrName = \"systemTimestamp\"].values;\n    \n    /* 属性 */\n    $createdAt := $.attributes[attrName = \"data\"].values.createdAt;\n    $id := $.attributes[attrName = \"data\"].values.id;\n    $isPublished := $.attributes[attrName = \"data\"].values.isPublished;\n    $packageType := $.attributes[attrName = \"data\"].values.packageType;\n    $pricePerKg := $.attributes[attrName = \"data\"].values.pricePerKg;\n    $producerId := $.attributes[attrName = \"data\"].values.producerId;\n    $quantity := $.attributes[attrName = \"data\"].values.quantity;\n    $scheduleNumber := $.attributes[attrName = \"data\"].values.scheduleNumber;\n    $shippingMonth := $.attributes[attrName = \"data\"].values.shippingMonth;\n    $shippingWeek := $.attributes[attrName = \"data\"].values.shippingWeek;\n    $updatedAt := $.attributes[attrName = \"data\"].values.updatedAt;\n    $variety := $.attributes[attrName = \"data\"].values.variety;\n\n    /* 出力 */\n    $map($ts, function($v, $i) {\n        {\n            \"timestamp\": $v,\n            \"createdAt\": $createdAt[$i],\n            \"id\": $id[$i],\n            \"isPublished\": $isPublished[$i],\n            \"packageType\": $packageType[$i],\n            \"pricePerKg\": $pricePerKg[$i],\n            \"producerId\": $producerId[$i],\n            \"quantity\": $quantity[$i],\n            \"scheduleNumber\": $scheduleNumber[$i],\n            \"shippingMonth\": $shippingMonth[$i],\n            \"shippingWeek\": $shippingWeek[$i],\n            \"updatedAt\": $updatedAt[$i],\n            \"variety\": $variety[$i]\n        }\n    })\n)",
+          "source": "url",
+          "type": "json",
+          "url": "/v2/entities/urn:ngsi-ld:FreshOrderSystemShippingSchedule:001/value",
+          "url_options": {
+            "data": "",
+            "headers": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Fiware-Service",
+                "value": "fresh_order_system"
+              },
+              {
+                "key": "Fiware-ServicePath",
+                "value": "/"
+              }
+            ],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "出荷予定登録",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "quantity",
+                "variety",
+                "timestamp"
+              ]
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "timestamp"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "variety"
+            ],
+            "keepFields": false
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 3,
+      "panels": [],
+      "title": "在庫",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "P0DB2B379060E8607"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "columns": [],
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "(\n    /* タイムスタンプ */\n    $ts := $.attributes[attrName = \"systemTimestamp\"].values;\n    \n    /* 属性 */\n    $createdAt := $.attributes[attrName = \"data\"].values.createdAt;\n    $id := $.attributes[attrName = \"data\"].values.id;\n    $isPublished := $.attributes[attrName = \"data\"].values.isPublished;\n    $packageType := $.attributes[attrName = \"data\"].values.packageType;\n    $pricePerKg := $.attributes[attrName = \"data\"].values.pricePerKg;\n    $producerId := $.attributes[attrName = \"data\"].values.producerId;\n    $quantity := $.attributes[attrName = \"data\"].values.quantity;\n    $updatedAt := $.attributes[attrName = \"data\"].values.updatedAt;\n    $variety := $.attributes[attrName = \"data\"].values.variety;\n\n    /* 出力 */\n    $map($ts, function($v, $i) {\n        {\n            \"timestamp\": $v,\n            \"createdAt\": $createdAt[$i],\n            \"id\": $id[$i],\n            \"isPublished\": $isPublished[$i],\n            \"packageType\": $packageType[$i],\n            \"pricePerKg\": $pricePerKg[$i],\n            \"producerId\": $producerId[$i],\n            \"quantity\": $quantity[$i],\n            \"updatedAt\": $updatedAt[$i],\n            \"variety\": $variety[$i]\n        }\n    })\n)",
+          "source": "url",
+          "type": "json",
+          "url": "/v2/entities/urn:ngsi-ld:FreshOrderSystemInventory:001/value",
+          "url_options": {
+            "data": "",
+            "headers": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Fiware-Service",
+                "value": "fresh_order_system"
+              },
+              {
+                "key": "Fiware-ServicePath",
+                "value": "/"
+              }
+            ],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "在庫登録",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "packageType",
+                "quantity",
+                "timestamp",
+                "variety"
+              ]
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "timestamp"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "variety"
+            ],
+            "keepFields": false
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 2,
+      "panels": [],
+      "title": "受注",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "P0DB2B379060E8607"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "columns": [],
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "(\n    /* タイムスタンプ */\n    $ts := $.attributes[attrName = \"systemTimestamp\"].values;\n    \n    /* 属性 */\n    $__typename := $.attributes[attrName = \"data\"].values.__typename;\n    $createdAt := $.attributes[attrName = \"data\"].values.createdAt;\n    $customerId := $.attributes[attrName = \"data\"].values.customerId;\n    $desiredDeliveryDate := $.attributes[attrName = \"data\"].values.desiredDeliveryDate;\n    $id := $.attributes[attrName = \"data\"].values.id;\n    $orderNumber := $.attributes[attrName = \"data\"].values.orderNumber;\n    $packageType := $.attributes[attrName = \"data\"].values.packageType;\n    $pricePerKg := $.attributes[attrName = \"data\"].values.pricePerKg;\n    $producerId := $.attributes[attrName = \"data\"].values.producerId;\n    $quantity := $.attributes[attrName = \"data\"].values.quantity;\n    $status := $.attributes[attrName = \"data\"].values.status;\n    $totalAmount := $.attributes[attrName = \"data\"].values.totalAmount;\n    $updatedAt := $.attributes[attrName = \"data\"].values.updatedAt;\n    $variety := $.attributes[attrName = \"data\"].values.variety;\n\n    /* 出力 */\n    $map($ts, function($v, $i) {\n        {\n            \"timestamp\": $v,\n            \"__typename\": $__typename[$i],\n            \"createdAt\": $createdAt[$i],\n            \"customerId\": $customerId[$i],\n            \"desiredDeliveryDate\": $desiredDeliveryDate[$i],\n            \"id\": $id[$i],\n            \"orderNumber\": $orderNumber[$i],\n            \"packageType\": $packageType[$i],\n            \"pricePerKg\": $pricePerKg[$i],\n            \"producerId\": $producerId[$i],\n            \"quantity\": $quantity[$i],\n            \"status\": $status[$i],\n            \"totalAmount\": $totalAmount[$i],\n            \"updatedAt\": $updatedAt[$i],\n            \"variety\": $variety[$i]\n        }\n    })\n)",
+          "source": "url",
+          "type": "json",
+          "url": "/v2/entities/urn:ngsi-ld:FreshOrderSystemOrder:001/value",
+          "url_options": {
+            "data": "",
+            "headers": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Fiware-Service",
+                "value": "fresh_order_system"
+              },
+              {
+                "key": "Fiware-ServicePath",
+                "value": "/"
+              }
+            ],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "受注登録",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "quantity",
+                "timestamp",
+                "variety"
+              ]
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "timestamp"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": [
+              "variety"
+            ],
+            "keepFields": false
+          }
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1y",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "キイチゴ受発注システム",
+  "uid": "b9d82442-38af-4f18-8803-3e4fe6316954",
+  "version": 2
+}

@@ -110,6 +110,7 @@ services:
     healthcheck:
       test: curl --fail -s http://nginx/api/orion/version || exit 1
       interval: 5s
+      start_period: 30s 
 
   grafana:
     labels:
@@ -130,6 +131,7 @@ services:
       - ./grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
       - ./grafana/dashboard-gis.yml:/etc/grafana/provisioning/dashboards/dashboard-gis.yml
       - ./grafana/dashboard-3rd.yml:/etc/grafana/provisioning/dashboards/dashboard-3rd.yml
+      - ./grafana/dashboard-raspberry.yml:/etc/grafana/provisioning/dashboards/dashboard-raspberry.yml
       - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
     entrypoint:
       - /bin/bash
