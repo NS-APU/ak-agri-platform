@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: 'Fresh Order System'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 60
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/Raspberry.json
+      foldersFromFilesStructure: false

@@ -1,0 +1,1361 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 3,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "panels": [],
+      "title": "生産計画",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "P0DB2B379060E8607"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "masskg"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "YELLOW"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "イエロー"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "HERITAGE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "ヘリテージ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CHILCOTIN"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "チルコチン"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "shippingMonth\\variety"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "月"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "HANOVER"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "ハノーバー"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "shippingMonth\\variety",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "columns": [],
+          "computed_columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "P0DB2B379060E8607"
+          },
+          "filterExpression": "",
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "(\n    /* タイムスタンプ */\n    $ts := $.attributes[attrName = \"systemTimestamp\"].values;\n    \n    /* 属性 */\n    $createdAt := $.attributes[attrName = \"data\"].values.createdAt;\n    $id := $.attributes[attrName = \"data\"].values.id;\n    $isPublished := $.attributes[attrName = \"data\"].values.isPublished;\n    $packageType := $.attributes[attrName = \"data\"].values.packageType;\n    $planNumber := $.attributes[attrName = \"data\"].values.planNumber;\n    $pricePerKg := $.attributes[attrName = \"data\"].values.pricePerKg;\n    $producerId := $.attributes[attrName = \"data\"].values.producerId;\n    $quantity := $.attributes[attrName = \"data\"].values.quantity;\n    $shippingMonth := $.attributes[attrName = \"data\"].values.shippingMonth;\n    $shippingWeek := $.attributes[attrName = \"data\"].values.shippingWeek;\n    $updatedAt := $.attributes[attrName = \"data\"].values.updatedAt;\n    $variety := $.attributes[attrName = \"data\"].values.variety;\n\n    /* 出力 */\n    $map($ts, function($v, $i) {\n        {\n            \"timestamp\": $v,\n            \"createdAt\": $createdAt[$i],\n            \"id\": $id[$i],\n            \"isPublished\": $isPublished[$i],\n            \"packageType\": $packageType[$i],\n            \"planNumber\": $planNumber[$i],\n            \"pricePerKg\": $pricePerKg[$i],\n            \"producerId\": $producerId[$i],\n            \"quantity\": $quantity[$i],\n            \"shippingMonth\": $shippingMonth[$i],\n            \"shippingWeek\": $shippingWeek[$i],\n            \"updatedAt\": $updatedAt[$i],\n            \"variety\": $variety[$i]\n        }\n    })\n)",
+          "source": "url",
+          "summarizeExpression": "",
+          "type": "json",
+          "url": "/v2/entities/urn:ngsi-ld:FreshOrderSystemProductionPlan:001/value",
+          "url_options": {
+            "data": "",
+            "headers": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Fiware-Service",
+                "value": "fresh_order_system"
+              },
+              {
+                "key": "Fiware-ServicePath",
+                "value": "/"
+              }
+            ],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "月別生産計画",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "quantity",
+                "shippingMonth",
+                "variety"
+              ]
+            }
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "quantity": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "shippingMonth": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "variety": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "variety",
+            "emptyValue": "zero",
+            "rowField": "shippingMonth",
+            "valueField": "quantity (sum)"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "shippingMonth\\variety"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "CHILCOTIN": 1,
+              "HANOVER": 2,
+              "HERITAGE": 3,
+              "YELLOW": 4,
+              "shippingMonth\\variety": 0
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 4,
+      "panels": [],
+      "title": "出荷予定",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "P0DB2B379060E8607"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "masskg"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CHILCOTIN"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "チルコチン"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "YELLOW"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "イエロー"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "HERITAGE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "ヘリテージ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "shippingMonth\\variety"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "月"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "HANOVER"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "ハノーバー"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "shippingMonth\\variety",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "columns": [],
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "(\n    /* タイムスタンプ */\n    $ts := $.attributes[attrName = \"systemTimestamp\"].values;\n    \n    /* 属性 */\n    $createdAt := $.attributes[attrName = \"data\"].values.createdAt;\n    $id := $.attributes[attrName = \"data\"].values.id;\n    $isPublished := $.attributes[attrName = \"data\"].values.isPublished;\n    $packageType := $.attributes[attrName = \"data\"].values.packageType;\n    $pricePerKg := $.attributes[attrName = \"data\"].values.pricePerKg;\n    $producerId := $.attributes[attrName = \"data\"].values.producerId;\n    $quantity := $.attributes[attrName = \"data\"].values.quantity;\n    $scheduleNumber := $.attributes[attrName = \"data\"].values.scheduleNumber;\n    $shippingMonth := $.attributes[attrName = \"data\"].values.shippingMonth;\n    $shippingWeek := $.attributes[attrName = \"data\"].values.shippingWeek;\n    $updatedAt := $.attributes[attrName = \"data\"].values.updatedAt;\n    $variety := $.attributes[attrName = \"data\"].values.variety;\n\n    /* 出力 */\n    $map($ts, function($v, $i) {\n        {\n            \"timestamp\": $v,\n            \"createdAt\": $createdAt[$i],\n            \"id\": $id[$i],\n            \"isPublished\": $isPublished[$i],\n            \"packageType\": $packageType[$i],\n            \"pricePerKg\": $pricePerKg[$i],\n            \"producerId\": $producerId[$i],\n            \"quantity\": $quantity[$i],\n            \"scheduleNumber\": $scheduleNumber[$i],\n            \"shippingMonth\": $shippingMonth[$i],\n            \"shippingWeek\": $shippingWeek[$i],\n            \"updatedAt\": $updatedAt[$i],\n            \"variety\": $variety[$i]\n        }\n    })\n)",
+          "source": "url",
+          "type": "json",
+          "url": "/v2/entities/urn:ngsi-ld:FreshOrderSystemShippingSchedule:001/value",
+          "url_options": {
+            "data": "",
+            "headers": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Fiware-Service",
+                "value": "fresh_order_system"
+              },
+              {
+                "key": "Fiware-ServicePath",
+                "value": "/"
+              }
+            ],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "月別出荷予定",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "quantity",
+                "variety",
+                "shippingMonth"
+              ]
+            }
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "quantity": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "shippingMonth": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "variety": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "variety",
+            "emptyValue": "zero",
+            "rowField": "shippingMonth",
+            "valueField": "quantity (sum)"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "shippingMonth\\variety"
+              }
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {
+              "CHILCOTIN": 1,
+              "HANOVER": 2,
+              "HERITAGE": 3,
+              "YELLOW": 4,
+              "shippingMonth\\variety": 0
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 3,
+      "panels": [],
+      "title": "在庫",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "P0DB2B379060E8607"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          },
+          "unit": "masskg"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FROZEN"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "冷凍"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FRESH"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "生鮮"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "variety\\packageType"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "CHILCOTIN": {
+                        "index": 1,
+                        "text": "チルコチン"
+                      },
+                      "HANOVER": {
+                        "index": 0,
+                        "text": "ハノーバー"
+                      },
+                      "HERITAGE": {
+                        "index": 2,
+                        "text": "ヘリテージ"
+                      },
+                      "YELLOW": {
+                        "index": 3,
+                        "text": "イエロー"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 7,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "columns": [],
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "(\n    /* タイムスタンプ */\n    $ts := $.attributes[attrName = \"systemTimestamp\"].values;\n    \n    /* 属性 */\n    $createdAt := $.attributes[attrName = \"data\"].values.createdAt;\n    $id := $.attributes[attrName = \"data\"].values.id;\n    $isPublished := $.attributes[attrName = \"data\"].values.isPublished;\n    $packageType := $.attributes[attrName = \"data\"].values.packageType;\n    $pricePerKg := $.attributes[attrName = \"data\"].values.pricePerKg;\n    $producerId := $.attributes[attrName = \"data\"].values.producerId;\n    $quantity := $.attributes[attrName = \"data\"].values.quantity;\n    $updatedAt := $.attributes[attrName = \"data\"].values.updatedAt;\n    $variety := $.attributes[attrName = \"data\"].values.variety;\n\n    /* 出力 */\n    $map($ts, function($v, $i) {\n        {\n            \"timestamp\": $v,\n            \"createdAt\": $createdAt[$i],\n            \"id\": $id[$i],\n            \"isPublished\": $isPublished[$i],\n            \"packageType\": $packageType[$i],\n            \"pricePerKg\": $pricePerKg[$i],\n            \"producerId\": $producerId[$i],\n            \"quantity\": $quantity[$i],\n            \"updatedAt\": $updatedAt[$i],\n            \"variety\": $variety[$i]\n        }\n    })\n)",
+          "source": "url",
+          "type": "json",
+          "url": "/v2/entities/urn:ngsi-ld:FreshOrderSystemInventory:001/value",
+          "url_options": {
+            "data": "",
+            "headers": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Fiware-Service",
+                "value": "fresh_order_system"
+              },
+              {
+                "key": "Fiware-ServicePath",
+                "value": "/"
+              }
+            ],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "年間在庫登録量",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "quantity",
+                "variety",
+                "packageType"
+              ]
+            }
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "packageType": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "quantity": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "variety": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "groupingToMatrix",
+          "options": {
+            "columnField": "packageType",
+            "emptyValue": "zero",
+            "rowField": "variety",
+            "valueField": "quantity (sum)"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": false,
+                "field": "variety\\packageType"
+              }
+            ]
+          }
+        }
+      ],
+      "type": "barchart"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "id": 2,
+      "panels": [],
+      "title": "受注",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "P0DB2B379060E8607"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.5,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count (count)"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "unit",
+                "value": "回"
+              },
+              {
+                "id": "displayName",
+                "value": "受注数"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "totalAmount (sum)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "円"
+              },
+              {
+                "id": "displayName",
+                "value": "受注額"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "columns": [],
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "backend",
+          "refId": "A",
+          "root_selector": "(\n    /* タイムスタンプ */\n    $ts := $.attributes[attrName = \"systemTimestamp\"].values;\n    \n    /* 属性 */\n    $__typename := $.attributes[attrName = \"data\"].values.__typename;\n    $createdAt := $.attributes[attrName = \"data\"].values.createdAt;\n    $customerId := $.attributes[attrName = \"data\"].values.customerId;\n    $desiredDeliveryDate := $.attributes[attrName = \"data\"].values.desiredDeliveryDate;\n    $id := $.attributes[attrName = \"data\"].values.id;\n    $orderNumber := $.attributes[attrName = \"data\"].values.orderNumber;\n    $packageType := $.attributes[attrName = \"data\"].values.packageType;\n    $pricePerKg := $.attributes[attrName = \"data\"].values.pricePerKg;\n    $producerId := $.attributes[attrName = \"data\"].values.producerId;\n    $quantity := $.attributes[attrName = \"data\"].values.quantity;\n    $status := $.attributes[attrName = \"data\"].values.status;\n    $totalAmount := $.attributes[attrName = \"data\"].values.totalAmount;\n    $updatedAt := $.attributes[attrName = \"data\"].values.updatedAt;\n    $variety := $.attributes[attrName = \"data\"].values.variety;\n\n    /* 出力 */\n    $map($ts, function($v, $i) {\n        {\n            \"timestamp\": $v,\n            \"__typename\": $__typename[$i],\n            \"createdAt\": $createdAt[$i],\n            \"customerId\": $customerId[$i],\n            \"desiredDeliveryDate\": $desiredDeliveryDate[$i],\n            \"id\": $id[$i],\n            \"orderNumber\": $orderNumber[$i],\n            \"packageType\": $packageType[$i],\n            \"pricePerKg\": $pricePerKg[$i],\n            \"producerId\": $producerId[$i],\n            \"quantity\": $quantity[$i],\n            \"status\": $status[$i],\n            \"totalAmount\": $totalAmount[$i],\n            \"updatedAt\": $updatedAt[$i],\n            \"variety\": $variety[$i]\n        }\n    })\n)",
+          "source": "url",
+          "type": "json",
+          "url": "/v2/entities/urn:ngsi-ld:FreshOrderSystemOrder:001/value",
+          "url_options": {
+            "data": "",
+            "headers": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Fiware-Service",
+                "value": "fresh_order_system"
+              },
+              {
+                "key": "Fiware-ServicePath",
+                "value": "/"
+              }
+            ],
+            "method": "GET"
+          }
+        }
+      ],
+      "title": "月別受注数、受注額",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "totalAmount",
+                "createdAt"
+              ]
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "createdAt"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-M",
+            "timeField": "createdAt",
+            "useTimezone": true
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "count",
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "createdAt"
+                }
+              },
+              "operator": "*",
+              "right": {
+                "fixed": "1"
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "include": [],
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "count": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "aggregate"
+              },
+              "createdAt": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "totalAmount": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              }
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "createdAt"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "width": 128
+          },
+          "mappings": [
+            {
+              "options": {
+                "CHILCOTIN": {
+                  "index": 2,
+                  "text": "チルコチン"
+                },
+                "FRESH": {
+                  "index": 5,
+                  "text": "生鮮"
+                },
+                "FROZEN": {
+                  "index": 4,
+                  "text": "冷凍"
+                },
+                "HANOVER": {
+                  "index": 1,
+                  "text": "ハノーバー"
+                },
+                "HERITAGE": {
+                  "index": 3,
+                  "text": "ヘリテージ"
+                },
+                "YELLOW": {
+                  "index": 0,
+                  "text": "イエロー"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "順位"
+            },
+            "properties": []
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "品種"
+            },
+            "properties": []
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "荷姿"
+            },
+            "properties": []
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "受注額"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "円"
+              },
+              {
+                "id": "custom.align",
+                "value": "right"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 9,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 8,
+          "refId": "A"
+        }
+      ],
+      "title": "年間受注額ランキング",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "packageType",
+                "totalAmount",
+                "variety"
+              ]
+            }
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "packageType": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "totalAmount": {
+                "aggregations": [
+                  "sum"
+                ],
+                "operation": "aggregate"
+              },
+              "variety": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "desc": true,
+                "field": "totalAmount (sum)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "index",
+            "mode": "index",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "rank",
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "index"
+                }
+              },
+              "right": {
+                "fixed": "1"
+              }
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "index": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "packageType": 2,
+              "rank": 0,
+              "totalAmount (sum)": 3,
+              "variety": 1
+            },
+            "renameByName": {
+              "packageType": "荷姿",
+              "rank": "順位",
+              "totalAmount (sum)": "受注額",
+              "variety": "品種"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "2024-12-31T15:00:00.000Z",
+    "to": "2026-03-08T15:00:00.000Z"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "キイチゴ受発注システム",
+  "uid": "b9d82442-38af-4f18-8803-3e4fe6316954",
+  "version": 2
+}
